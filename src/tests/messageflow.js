@@ -39,7 +39,6 @@ export const messageWorker = new Worker(
         errorReason: error.message
       });
 
-      // Throwing the error triggers BullMQ retries
       throw error;
     }
   },
