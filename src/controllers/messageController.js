@@ -13,16 +13,6 @@ export const handleIncomingMessage = async (msg) => {
 
   user.lastSeen = new Date();
 
-  if (text.toLowerCase().includes("human") || text.toLowerCase().includes("agent")) {
-    user.isHumanHandoff = true;
-    user.conversationState = "human";
-    await user.save();
-    await enqueueMessage(from, "🧑‍💼 A human agent will contact you shortly.");
-    return;
-  }
-
-  if (user.isHumanHandoff) return;
-
   let reply = "";
 
   // Button-based onboarding flow
@@ -74,4 +64,5 @@ export const handleIncomingMessage = async (msg) => {
 
   if (reply) await enqueueMessage(from, reply);
 };
+
 

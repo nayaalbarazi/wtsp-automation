@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema({
 
   conversationState: {
     type: String,
-    enum: ["idle", "onboarding", "matching", "completed", "human"],
+    enum: ["idle", "onboarding", "matching", "completed"],
     default: "idle"
   },
 
@@ -17,11 +17,6 @@ const UserSchema = new mongoose.Schema({
     geography: String
   },
 
-  isHumanHandoff: {
-    type: Boolean,
-    default: false
-  },
-
   lastSeen: {
     type: Date,
     default: Date.now
@@ -29,4 +24,3 @@ const UserSchema = new mongoose.Schema({
 });
 
 export default mongoose.model("User", UserSchema);
-
