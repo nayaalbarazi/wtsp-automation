@@ -4,12 +4,13 @@ import { handleIncomingMessage } from "../controllers/messageController.js";
 
 const router = express.Router();
 
+// Webhook verification for WhatsApp
 router.get("/", verifyWebhook);
 
-
+// Receive messages from WhatsApp
 router.post("/", receiveMessage);
 
-
+// Test route to simulate incoming message locally
 router.get("/test", async (req, res) => {
   try {
     const fakeMsg = {
@@ -25,6 +26,7 @@ router.get("/test", async (req, res) => {
   }
 });
 
+// Health check route
 router.get("/health", (req, res) => res.status(200).send("✅ OK"));
 
 export default router;

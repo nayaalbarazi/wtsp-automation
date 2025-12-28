@@ -1,51 +1,20 @@
-import { Worker } from "bullmq";
-import { sendTextMessage } from "../services/whatsappService.js";
-import { askGPT } from "../services/gptService.js";
-import Message from "../models/Message.js";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import { connectDB } from "../services/db.js";
+import { handleIncomingMessage } from "../controllers/messageController.js";
 
-export const messageWorker = new Worker(
-  "messages",
-  async (job) => {
-    const { from, text } = job.data;
+dotenv.config();
 
-    try {
-      
-      let reply = text.includes("human") || text.includes("agent")
-        ? "🧑‍💼 A human will contact you."
-        : await askGPT(text);
+async function testFlow() {
+  await connectDB();
 
-      
-      await sendTextMessage(from, reply);
-
-      
-      await Message.create({
-        from: "BOT",
-        to: from,
-        text: reply,
-        timestamp: new Date(),
-        direction: "outgoing",
-        status: "sent"
-      });
-
-    } catch (error) {
-      
-      await Message.create({
-        from: "BOT",
-        to: from,
-        text,
-        timestamp: new Date(),
-        direction: "outgoing",
-        status: "failed",
-        errorReason: error.message
-      });
-
-      throw error;
-    }
-  },
-  {
-    connection: {
-      host: process.env.REDIS_HOST,
-      port: process.env.REDIS_PORT
-    }
+  const messages = ["Buyer", "Fintech", "5-10M", "MENA"];
+  for (const msg of messages) {
+    await handleIncomingMessage({ from: "1234567890", text: { body: msg } });
   }
-);
+
+  console.log("✅ Test flow finished");
+  process.exit(0);
+}
+
+testFlow();
