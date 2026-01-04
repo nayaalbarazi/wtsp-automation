@@ -11,14 +11,13 @@ export const sendTextMessage = async (to, text) => {
         messaging_product: "whatsapp",
         to,
         type: "text",
-        text: { body: text }
+        text: { body: text },
       },
-      {
-        headers: { Authorization: `Bearer ${token}` }
-      }
+      { headers: { Authorization: `Bearer ${token}` } }
     );
   } catch (err) {
     console.error("WhatsApp send error:", err.message);
   }
 };
+
 
