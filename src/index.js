@@ -11,6 +11,9 @@ import { initQueueWorkers } from "./services/whatsappQueue.js";
 import { startFollowupJob } from "./jobs/followupJob.js";
 import { startWeeklySummaryJob } from "./jobs/weeklySummaryJob.js";
 import { startMeetingReminderJob } from "./jobs/meetingReminderJob.js";
+import { startBotPerformanceJob } from "./jobs/weeklyBotReport.js";
+
+startBotPerformanceJob();
 
 dotenv.config();
 const app = express();

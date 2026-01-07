@@ -1,9 +1,10 @@
-import User from "../models/userr.js";
+mport User from "../models/userr.js";
 import Message from "../models/messagemodel.js";
 import { enqueueMessage } from "../services/whatsappQueue.js";
 import { sendForMatching } from "../services/matchingService.js";
 import { scheduleMeeting } from "../services/calendarService.js";
 import { askGPT } from "../services/gptService.js";
+import { trackEvent } from "../analytics/eventTracker.js";
 
 export const handleIncomingMessage = async (msg) => {
   const from = msg.from;
@@ -53,6 +54,9 @@ export const handleIncomingMessage = async (msg) => {
       let msgText = "✅ Matches found:\n\n";
       matches.forEach((m, i) => {
         msgText += `${i + 1}️⃣ ${m.title}\n👉 ${m.url}\n\n`;
+        msgText += `⭐ Score: ${m.matchScore}/100\n`;
+        msgText += `Why: ${m.matchReasons.join(", ")}\n\n`;
+
       });
       await enqueueMessage(from, msgText);
       await enqueueMessage(
