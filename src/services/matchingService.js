@@ -1,6 +1,6 @@
 
 import axios from "axios";
-import { scoreMatch } from "../intelligence/scoringEngine.";
+import { scoreMatch } from "../intelligence/scoringEngine.js";
 
 export const sendForMatching = async (userData) => {
   const res = await axios.post(process.env.MATCHING_API_URL, userData);

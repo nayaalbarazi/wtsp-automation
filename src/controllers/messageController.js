@@ -1,4 +1,4 @@
-mport User from "../models/userr.js";
+import User from "../models/userr.js";
 import Message from "../models/messagemodel.js";
 import { enqueueMessage } from "../services/whatsappQueue.js";
 import { sendForMatching } from "../services/matchingService.js";
@@ -56,7 +56,6 @@ export const handleIncomingMessage = async (msg) => {
         msgText += `${i + 1}️⃣ ${m.title}\n👉 ${m.url}\n\n`;
         msgText += `⭐ Score: ${m.matchScore}/100\n`;
         msgText += `Why: ${m.matchReasons.join(", ")}\n\n`;
-
       });
       await enqueueMessage(from, msgText);
       await enqueueMessage(
@@ -69,14 +68,24 @@ export const handleIncomingMessage = async (msg) => {
   // === Scheduling Flow ===
   else if (user.conversationState === "scheduling") {
     try {
-      const [company, dateTimeStr] = text.split(" at ");
-      if (!company || !dateTimeStr) throw new Error("Invalid format");
+      // Accept multiple "at" variants
+      const match = text.match(/(.+?)\s+at\s+(.+)/i);
+      if (!match) throw new Error("Invalid format");
 
+      const company = match[1].trim();
+      const dateTimeStr = match[2].trim();
+
+      // Try parsing as ISO, fallback to Date.parse()
       const startTime = new Date(dateTimeStr);
+      if (isNaN(startTime.getTime())) {
+        reply = "❌ Invalid date format. Please use 'YYYY-MM-DDTHH:MM'";
+        await enqueueMessage(from, reply);
+        return;
+      }
       const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // +1 hour
 
       const meeting = await scheduleMeeting({
-        userEmail: "user@example.com", // TODO: map real emails
+        userEmail: user.email || "user@example.com", // Placeholder for mapping
         title: company,
         startTime,
         endTime

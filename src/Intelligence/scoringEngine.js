@@ -1,29 +1,20 @@
-export const scoreMatch = (user, deal) => {
-  let score = 0;
-  const reasons = [];
+import { adjustScoreByFeedback } from "./dealLearning.js";
 
-  if (user.industry === deal.industry) {
-    score += 30;
-    reasons.push("Industry match");
-  }
+/**
+ * Example function to compute final match score
+ * @param {number} baseScore - Score from matching algorithm (0-100)
+ * @param {"positive"|"negative"|null} feedback
+ * @param {Object} userData - optional user data to influence scoring
+ */
+export const computeFinalScore = (baseScore, feedback, userData = {}) => {
+  let score = baseScore;
 
-  if (user.geography === deal.geography) {
-    score += 20;
-    reasons.push("Geography match");
-  }
+  
+  score = adjustScoreByFeedback(score, feedback);
 
-  if (deal.ticketSize === user.ticketSize) {
-    score += 25;
-    reasons.push("Ticket size alignment");
-  }
+  //This is only an example
+  if (userData.role === "investor") score += 2;
+  if (userData.ticketSize === "5–10M") score += 1;
 
-  if (deal.stage === user.preferredStage) {
-    score += 15;
-    reasons.push("Stage fit");
-  }
-
-  return {
-    score: Math.min(score, 100),
-    reasons
-  };
+  return Math.min(Math.max(score, 0), 100); // Clamp 0-100
 };

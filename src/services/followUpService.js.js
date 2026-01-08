@@ -8,11 +8,9 @@ export const sendFollowUps = async () => {
   });
 
   for (const user of users) {
-    await enqueueMessage(
-      user.phone,
-      "👋 Just checking in — would you like to proceed with any of the deals I shared?"
-    );
-    user.conversationState = "followup";
-    await user.save();
+   await enqueueMessage(user.phone, `👋 Just checking in — would you like to proceed with any of the deals I shared?`);
+user.conversationState = "followup";
+await user.save();
+
   }
 };

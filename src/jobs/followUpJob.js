@@ -1,4 +1,3 @@
-// jobs/followupJob.js
 import cron from "node-cron";
 import User from "../models/userr.js";
 import { enqueueMessage } from "../services/whatsappQueue.js";
@@ -6,10 +5,10 @@ import { askGPT } from "../services/gptService.js";
 
 /**
  * Sends follow-up messages to users who have completed onboarding or meetings.
- * Runs weekly on Mondays at 10:00 AM by default.
+ * Runs weekly on Mondays at 10:00 AM.
  */
 export const startFollowupJob = () => {
-  cron.schedule("0 10 * * 1", async () => { // Every Monday at 10:00
+  cron.schedule("0 10 * * 1", async () => {
     try {
       const users = await User.find({ conversationState: "completed" });
 
@@ -30,7 +29,6 @@ export const startFollowupJob = () => {
           console.error(`❌ Failed to send follow-up to ${user.phone}:`, err);
         }
       }
-
     } catch (err) {
       console.error("Follow-up job error:", err);
     }

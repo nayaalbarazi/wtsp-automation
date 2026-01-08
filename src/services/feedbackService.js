@@ -5,4 +5,6 @@ export const saveDealFeedback = async (user, dealId, feedback) => {
     feedback,
     date: new Date()
   });
+  await user.save();
 };
+

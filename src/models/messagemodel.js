@@ -7,5 +7,6 @@ const MessageSchema = new mongoose.Schema({
   timestamp: { type: Date, default: Date.now },
   direction: { type: String, enum: ["incoming", "outgoing"], required: true },
 });
+MessageSchema.index({ from: 1, timestamp: -1 });
 
 export default mongoose.model("Message", MessageSchema);
